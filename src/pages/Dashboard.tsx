@@ -31,25 +31,35 @@ const Dashboard = () => {
     }
   }, []);
 
-  // Check if already claimed
+  // Check if already claimed - use persisted timestamp
   useEffect(() => {
-    if (localStorage.getItem("rp_claimed")) {
-      setIsClaimed(true);
-      let t = 24 * 60 * 60;
-      const interval = setInterval(() => {
-        const h = String(Math.floor(t / 3600)).padStart(2, "0");
-        const m = String(Math.floor((t % 3600) / 60)).padStart(2, "0");
-        const s = String(t % 60).padStart(2, "0");
-        setCountdown(`${h}:${m}:${s}`);
-        t--;
-        if (t < 0) {
-          clearInterval(interval);
+    const claimedAt = localStorage.getItem("rp_claimed");
+    if (claimedAt) {
+      const claimTime = parseInt(claimedAt, 10);
+      const expiresAt = claimTime + 24 * 60 * 60 * 1000;
+
+      const tick = () => {
+        const remaining = Math.floor((expiresAt - Date.now()) / 1000);
+        if (remaining <= 0) {
           setIsClaimed(false);
           setCountdown("");
           localStorage.removeItem("rp_claimed");
+          return false;
         }
-      }, 1000);
-      return () => clearInterval(interval);
+        const h = String(Math.floor(remaining / 3600)).padStart(2, "0");
+        const m = String(Math.floor((remaining % 3600) / 60)).padStart(2, "0");
+        const s = String(remaining % 60).padStart(2, "0");
+        setCountdown(`${h}:${m}:${s}`);
+        setIsClaimed(true);
+        return true;
+      };
+
+      if (tick()) {
+        const interval = setInterval(() => {
+          if (!tick()) clearInterval(interval);
+        }, 1000);
+        return () => clearInterval(interval);
+      }
     }
   }, []);
 
@@ -64,7 +74,8 @@ const Dashboard = () => {
   const handleClaim = () => {
     if (isClaimed) return;
     
-    localStorage.setItem("rp_claimed", "1");
+    const now = Date.now();
+    localStorage.setItem("rp_claimed", String(now));
     const newBalance = balance + 30000;
     setBalance(newBalance);
     localStorage.setItem("rp_balance", String(newBalance));
@@ -72,19 +83,20 @@ const Dashboard = () => {
     
     toast.success("₦30,000 claimed successfully!");
 
-    let t = 24 * 60 * 60;
+    const expiresAt = now + 24 * 60 * 60 * 1000;
     const interval = setInterval(() => {
-      const h = String(Math.floor(t / 3600)).padStart(2, "0");
-      const m = String(Math.floor((t % 3600) / 60)).padStart(2, "0");
-      const s = String(t % 60).padStart(2, "0");
-      setCountdown(`${h}:${m}:${s}`);
-      t--;
-      if (t < 0) {
+      const remaining = Math.floor((expiresAt - Date.now()) / 1000);
+      if (remaining <= 0) {
         clearInterval(interval);
         setIsClaimed(false);
         setCountdown("");
         localStorage.removeItem("rp_claimed");
+        return;
       }
+      const h = String(Math.floor(remaining / 3600)).padStart(2, "0");
+      const m = String(Math.floor((remaining % 3600) / 60)).padStart(2, "0");
+      const s = String(remaining % 60).padStart(2, "0");
+      setCountdown(`${h}:${m}:${s}`);
     }, 1000);
   };
 
