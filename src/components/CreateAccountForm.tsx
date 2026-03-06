@@ -53,9 +53,12 @@ export function CreateAccountForm() {
 
     setIsLoading(true);
     
-    // Save username for welcome page (sanitized)
-    const sanitizedName = firstName.replace(/[<>\"'&]/g, '');
-    localStorage.setItem("username", sanitizedName || "User");
+    // Save user data for welcome/profile pages (sanitized)
+    const sanitizedFirst = firstName.replace(/[<>"'&]/g, '').trim();
+    const sanitizedLast = lastName.replace(/[<>"'&]/g, '').trim();
+    localStorage.setItem("firstName", sanitizedFirst || "User");
+    localStorage.setItem("lastName", sanitizedLast);
+    localStorage.setItem("username", sanitizedFirst || "User");
     
     // Wait 5 seconds then navigate
     setTimeout(() => {
