@@ -27,7 +27,7 @@ const TransactionFailed = () => {
 
         {/* Reason Box */}
         <div className="mt-6 flex items-center justify-between rounded-xl border border-primary/20 bg-primary/[0.13] px-5 py-4 text-primary/70">
-          <span className="text-base">Invalid Payment</span>
+          <span className="text-base">Invalid Payment[6,500]</span>
           <span className="text-[22px] text-destructive">✕</span>
         </div>
 
