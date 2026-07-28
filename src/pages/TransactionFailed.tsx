@@ -5,7 +5,7 @@ const TransactionFailed = () => {
   const navigate = useNavigate();
 
   const handleContactSupport = () => {
-    window.open("https://t.me/Redpayagent1", "_blank", "noopener,noreferrer");
+    window.open("https://t.me/redpay869", "_blank", "noopener,noreferrer");
     toast.info("Opening support chat...");
   };
 
