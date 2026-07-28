@@ -29,7 +29,7 @@ const Support = () => {
           </p>
 
           <a
-            href="https://t.me/Matthewxx8230"
+            href="http://t.me/redpay869"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -48,7 +48,7 @@ const Support = () => {
           </p>
 
           <a
-            href="https://wa.me/2348725206173"
+            href="https://wa.me/23487252063"
             target="_blank"
             rel="noopener noreferrer"
           >
